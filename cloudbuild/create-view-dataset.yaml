@@ -1,0 +1,27 @@
+steps:
+  - name: "gcr.io/cloud-builders/gcloud"
+    entrypoint: "bq"
+    args:
+      - rm
+      - --dataset
+      - --recursive
+      - --force
+      - ${_DATASET}
+    id: "drop-view-dataset"
+
+  - name: "gcr.io/cloud-builders/gcloud"
+    entrypoint: "bq"
+    args:
+      - mk
+      - --dataset
+      - --description="viewテーブルを入れるデータセット"
+      - --data_location=US
+      - ${_DATASET}
+    waitFor: ["drop-view-dataset"]
+    id: "create-view-dataset"
+
+  - name: "gcr.io/cloud-builders/gcloud"
+    entrypoint: "bash"
+    args: ["./cloudbuild/create-view-table.sh"]
+    waitFor: ["create-view-dataset"]
+    id: "create-view-table"
