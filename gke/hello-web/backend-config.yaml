@@ -1,0 +1,10 @@
+apiVersion: cloud.google.com/v1beta1
+kind: BackendConfig
+metadata:
+  name: hello-web-backend-config
+  namespace: hello-web
+spec:
+  iap:
+    enabled: true
+    oauthclientCredentials:
+      secretName: hello-web-iap-oauth-client-id
