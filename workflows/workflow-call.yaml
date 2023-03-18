@@ -1,0 +1,24 @@
+main:
+  params: [input]
+  steps:
+    - init:
+        assign:
+          - name_list:
+            - name: a
+            - name: b
+            - name: c
+            - name: d
+    - call_process:
+        parallel:
+          for:
+            value: name
+            in: ${name_list}
+            steps:
+              - call_workflow:
+                  call: googleapis.workflowexecutions.v1.projects.locations.workflows.executions.create
+                  args:
+                    parent: projects/${your-project}/locations/asia-northeast1/workflows/${your-workflow}
+                    body:
+                      argument: ${json.encode_to_string(name)}
+                      callLogLevel: LOG_ALL_CALLS
+                  result: result
